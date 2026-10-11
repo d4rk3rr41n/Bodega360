@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Metadatos básicos y configuración responsive -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bodega360 - Panel principal con indicadores del inventario.">
+    <title>Dashboard | Bodega360</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librería de iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app">
+
+        <!-- =================================================================
+             SIDEBAR (navegación principal)
+             ================================================================= -->
+        <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+            <a href="dashboard.html" class="sidebar__marca">
+                <i class="ph-fill ph-cube"></i>
+                <span>Bodega360</span>
+            </a>
+
+            <nav class="sidebar__nav">
+                <p class="sidebar__titulo">Menú</p>
+                <ul class="sidebar__lista">
+                    <li><a href="dashboard.html" class="sidebar__enlace"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+                    <li><a href="inventario.html" class="sidebar__enlace"><i class="ph ph-package"></i> Inventario</a></li>
+                    <li><a href="movimientos.html" class="sidebar__enlace"><i class="ph ph-arrows-left-right"></i> Movimientos</a></li>
+                    <li><a href="alertas.html" class="sidebar__enlace"><i class="ph ph-bell-ringing"></i> Alertas <span class="sidebar__contador">5</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar__pie">
+                <div class="sidebar__usuario">
+                    <span class="sidebar__avatar">AD</span>
+                    <div class="sidebar__usuario-info">
+                        <span class="sidebar__usuario-nombre">Administrador</span>
+                        <span class="sidebar__usuario-rol">Jefe de bodega</span>
+                    </div>
+                </div>
+                <button type="button" class="sidebar__salir" data-accion="cerrar-sesion">
+                    <i class="ph ph-sign-out"></i> Cerrar sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Capa oscura para cerrar el menú en móvil -->
+        <div class="overlay" aria-hidden="true"></div>
+
+        <!-- =================================================================
+             ÁREA PRINCIPAL
+             ================================================================= -->
+        <div class="principal">
+
+            <!-- Header superior -->
+            <header class="topbar">
+                <div class="topbar__izquierda">
+                    <button type="button" class="topbar__menu" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar__titulo">Dashboard</h1>
+                        <p class="topbar__subtitulo" data-fecha-actual>Resumen general</p>
+                    </div>
+                </div>
+                <div class="topbar__derecha">
+                    <a href="alertas.html" class="topbar__icono" aria-label="Ver alertas">
+                        <i class="ph ph-bell"></i><span class="punto"></span>
+                    </a>
+                    <a href="movimientos.html" class="btn btn--primario" aria-label="Registrar movimiento">
+                        <i class="ph ph-plus-circle"></i><span class="btn__texto">Registrar movimiento</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Contenido principal -->
+            <main class="contenido">
+
+                <!-- -------------------------------------------------------
+                     TARJETAS KPI (RF03)
+                     ------------------------------------------------------- -->
+                <section class="kpis" aria-label="Indicadores clave">
+                    <article class="kpi">
+                        <span class="kpi__icono"><i class="ph ph-package"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Productos registrados</span>
+                            <strong class="kpi__valor">248</strong>
+                            <span class="kpi__variacion"><i class="ph ph-trend-up texto-exito"></i> +12 este mes</span>
+                        </div>
+                    </article>
+
+                    <article class="kpi kpi--alerta">
+                        <span class="kpi__icono"><i class="ph ph-warning"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Productos en alerta</span>
+                            <strong class="kpi__valor">5</strong>
+                            <span class="kpi__variacion"><span class="texto-critico">2 críticos</span>&nbsp;· 3 bajos</span>
+                        </div>
+                    </article>
+
+                    <article class="kpi kpi--exito">
+                        <span class="kpi__icono"><i class="ph ph-arrow-down-left"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Entradas hoy</span>
+                            <strong class="kpi__valor">34</strong>
+                            <span class="kpi__variacion"><i class="ph ph-trend-up texto-exito"></i> +8% vs. ayer</span>
+                        </div>
+                    </article>
+
+                    <article class="kpi kpi--critico">
+                        <span class="kpi__icono"><i class="ph ph-arrow-up-right"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Salidas hoy</span>
+                            <strong class="kpi__valor">21</strong>
+                            <span class="kpi__variacion"><i class="ph ph-trend-down texto-critico"></i> -5% vs. ayer</span>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- -------------------------------------------------------
+                     GRÁFICO + PRIORIDAD DE REPOSICIÓN
+                     ------------------------------------------------------- -->
+                <section class="dashboard-grid">
+
+                    <!-- Simulador de gráfico de barras (RF02) -->
+                    <article class="panel">
+                        <div class="panel__encabezado">
+                            <div>
+                                <h2 class="panel__titulo"><i class="ph ph-chart-bar"></i> Movimientos de la semana</h2>
+                                <p class="texto-secundario">Unidades movidas por día</p>
+                            </div>
+                            <div class="grafico__leyenda">
+                                <span style="--color-leyenda: var(--color-primario);">Entradas</span>
+                                <span style="--color-leyenda: #64b5f6;">Salidas</span>
+                            </div>
+                        </div>
+
+                        <div class="grafico">
+                            <!-- Cada día contiene dos barras: entradas y salidas.
+                                 La altura se calcula con JS a partir de data-valor. -->
+                            <div class="grafico__area" role="img" aria-label="Gráfico de barras de entradas y salidas de lunes a domingo">
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="42"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="30"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="58"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="41"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="35"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="47"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="66"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="38"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="50"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="55"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="22"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="18"></span>
+                                </div>
+                                <div class="grafico__dia">
+                                    <span class="grafico__barra grafico__barra--entrada" data-valor="34"></span>
+                                    <span class="grafico__barra grafico__barra--salida" data-valor="21"></span>
+                                </div>
+                            </div>
+                            <div class="grafico__etiquetas" aria-hidden="true">
+                                <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Hoy</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Lista de prioridad de reposición -->
+                    <article class="panel">
+                        <div class="panel__encabezado">
+                            <div>
+                                <h2 class="panel__titulo"><i class="ph ph-siren"></i> Prioridad de reposición</h2>
+                                <p class="texto-secundario">Stock actual vs. mínimo</p>
+                            </div>
+                            <a href="alertas.html" class="panel__enlace">Ver todo <i class="ph ph-arrow-right"></i></a>
+                        </div>
+
+                        <ul class="prioridad">
+                            <li class="prioridad__item">
+                                <div class="prioridad__fila">
+                                    <div>
+                                        <p class="prioridad__nombre">Motor trifásico 5 HP</p>
+                                        <p class="prioridad__codigo">MOT-002 · 2 de 5 und.</p>
+                                    </div>
+                                    <span class="badge badge--critico">Crítico</span>
+                                </div>
+                                <div class="progreso"><div class="progreso__relleno" data-porcentaje="40"></div></div>
+                            </li>
+                            <li class="prioridad__item">
+                                <div class="prioridad__fila">
+                                    <div>
+                                        <p class="prioridad__nombre">Guantes de nitrilo (caja x100)</p>
+                                        <p class="prioridad__codigo">GUA-005 · 4 de 20 und.</p>
+                                    </div>
+                                    <span class="badge badge--critico">Crítico</span>
+                                </div>
+                                <div class="progreso"><div class="progreso__relleno" data-porcentaje="20"></div></div>
+                            </li>
+                            <li class="prioridad__item">
+                                <div class="prioridad__fila">
+                                    <div>
+                                        <p class="prioridad__nombre">Cinta de embalaje 48 mm</p>
+                                        <p class="prioridad__codigo">CIN-003 · 35 de 50 und.</p>
+                                    </div>
+                                    <span class="badge badge--bajo">Bajo stock</span>
+                                </div>
+                                <div class="progreso"><div class="progreso__relleno progreso__relleno--alerta" data-porcentaje="70"></div></div>
+                            </li>
+                            <li class="prioridad__item">
+                                <div class="prioridad__fila">
+                                    <div>
+                                        <p class="prioridad__nombre">Casco de seguridad</p>
+                                        <p class="prioridad__codigo">CAS-007 · 12 de 15 und.</p>
+                                    </div>
+                                    <span class="badge badge--bajo">Bajo stock</span>
+                                </div>
+                                <div class="progreso"><div class="progreso__relleno progreso__relleno--alerta" data-porcentaje="80"></div></div>
+                            </li>
+                        </ul>
+                    </article>
+                </section>
+
+                <!-- -------------------------------------------------------
+                     ÚLTIMOS MOVIMIENTOS
+                     ------------------------------------------------------- -->
+                <section class="panel">
+                    <div class="panel__encabezado">
+                        <h2 class="panel__titulo"><i class="ph ph-clock-counter-clockwise"></i> Últimos movimientos</h2>
+                        <a href="movimientos.html" class="panel__enlace">Ir a movimientos <i class="ph ph-arrow-right"></i></a>
+                    </div>
+                    <ul class="lista-movimientos">
+                        <li class="movimiento">
+                            <span class="movimiento__icono movimiento__icono--entrada"><i class="ph ph-arrow-down-left"></i></span>
+                            <div class="movimiento__info">
+                                <p class="movimiento__titulo">Válvula de bola 1/2"</p>
+                                <p class="movimiento__detalle">Compra a proveedor · Hoy, 10:42 a. m.</p>
+                            </div>
+                            <span class="movimiento__cantidad texto-exito">+20</span>
+                        </li>
+                        <li class="movimiento">
+                            <span class="movimiento__icono movimiento__icono--salida"><i class="ph ph-arrow-up-right"></i></span>
+                            <div class="movimiento__info">
+                                <p class="movimiento__titulo">Guantes de nitrilo (caja x100)</p>
+                                <p class="movimiento__detalle">Despacho a producción · Hoy, 9:15 a. m.</p>
+                            </div>
+                            <span class="movimiento__cantidad texto-critico">-6</span>
+                        </li>
+                        <li class="movimiento">
+                            <span class="movimiento__icono movimiento__icono--ajuste"><i class="ph ph-sliders-horizontal"></i></span>
+                            <div class="movimiento__info">
+                                <p class="movimiento__titulo">Cinta de embalaje 48 mm</p>
+                                <p class="movimiento__detalle">Ajuste por conteo físico · Ayer, 5:30 p. m.</p>
+                            </div>
+                            <span class="movimiento__cantidad texto-alerta">=35</span>
+                        </li>
+                    </ul>
+                </section>
+            </main>
+
+            <footer class="pie-pagina">© 2026 Bodega360 · Sistema de gestión de inventarios</footer>
+        </div>
+    </div>
+
+    <!-- Lógica de la aplicación -->
+    <script src="js/app.js"></script>
+</body>
+</html>

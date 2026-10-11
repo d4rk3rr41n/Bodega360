@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Metadatos básicos y configuración responsive -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bodega360 - Catálogo de productos del inventario.">
+    <title>Inventario | Bodega360</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librería de iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app">
+
+        <!-- =================================================================
+             SIDEBAR (navegación principal)
+             ================================================================= -->
+        <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+            <a href="dashboard.html" class="sidebar__marca">
+                <i class="ph-fill ph-cube"></i>
+                <span>Bodega360</span>
+            </a>
+
+            <nav class="sidebar__nav">
+                <p class="sidebar__titulo">Menú</p>
+                <ul class="sidebar__lista">
+                    <li><a href="dashboard.html" class="sidebar__enlace"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+                    <li><a href="inventario.html" class="sidebar__enlace"><i class="ph ph-package"></i> Inventario</a></li>
+                    <li><a href="movimientos.html" class="sidebar__enlace"><i class="ph ph-arrows-left-right"></i> Movimientos</a></li>
+                    <li><a href="alertas.html" class="sidebar__enlace"><i class="ph ph-bell-ringing"></i> Alertas <span class="sidebar__contador">5</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar__pie">
+                <div class="sidebar__usuario">
+                    <span class="sidebar__avatar">AD</span>
+                    <div class="sidebar__usuario-info">
+                        <span class="sidebar__usuario-nombre">Administrador</span>
+                        <span class="sidebar__usuario-rol">Jefe de bodega</span>
+                    </div>
+                </div>
+                <button type="button" class="sidebar__salir" data-accion="cerrar-sesion">
+                    <i class="ph ph-sign-out"></i> Cerrar sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Capa oscura para cerrar el menú en móvil -->
+        <div class="overlay" aria-hidden="true"></div>
+
+        <!-- =================================================================
+             ÁREA PRINCIPAL
+             ================================================================= -->
+        <div class="principal">
+
+            <!-- Header superior -->
+            <header class="topbar">
+                <div class="topbar__izquierda">
+                    <button type="button" class="topbar__menu" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar__titulo">Inventario</h1>
+                        <p class="topbar__subtitulo">Catálogo general de productos</p>
+                    </div>
+                </div>
+                <div class="topbar__derecha">
+                    <a href="alertas.html" class="topbar__icono" aria-label="Ver alertas">
+                        <i class="ph ph-bell"></i><span class="punto"></span>
+                    </a>
+                    <a href="movimientos.html" class="btn btn--primario" aria-label="Registrar movimiento">
+                        <i class="ph ph-plus-circle"></i><span class="btn__texto">Registrar movimiento</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Contenido principal -->
+            <main class="contenido">
+                <section class="panel" aria-labelledby="titulo-catalogo">
+
+                    <div class="panel__encabezado">
+                        <div>
+                            <h2 class="panel__titulo" id="titulo-catalogo"><i class="ph ph-package"></i> Catálogo de productos</h2>
+                            <p class="texto-secundario">Consulta existencias, ubicación y estado de cada producto (RF01).</p>
+                        </div>
+                    </div>
+
+                    <!-- ---------------------------------------------------
+                         BARRA DE HERRAMIENTAS: buscador, filtros y botón
+                         --------------------------------------------------- -->
+                    <div class="toolbar">
+                        <div class="toolbar__filtros">
+                            <div class="campo toolbar__buscador">
+                                <label for="buscar-producto" class="sr-only">Buscar producto</label>
+                                <div class="campo__control">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                    <input type="search" id="buscar-producto" class="input" placeholder="Buscar por código, nombre o ubicación...">
+                                </div>
+                            </div>
+
+                            <div class="campo">
+                                <label for="filtro-categoria" class="sr-only">Filtrar por categoría</label>
+                                <select id="filtro-categoria" class="select">
+                                    <option value="">Todas las categorías</option>
+                                    <option value="hidraulica">Hidráulica</option>
+                                    <option value="electrica">Eléctrica</option>
+                                    <option value="empaque">Empaque</option>
+                                    <option value="herramientas">Herramientas</option>
+                                    <option value="seguridad">Seguridad industrial</option>
+                                    <option value="ferreteria">Ferretería</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="filtro-estado" class="sr-only">Filtrar por estado</label>
+                                <select id="filtro-estado" class="select">
+                                    <option value="">Todos los estados</option>
+                                    <option value="optimo">Óptimo</option>
+                                    <option value="bajo">Bajo stock</option>
+                                    <option value="critico">Crítico</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="button" id="btn-nuevo-producto" class="btn btn--primario">
+                            <i class="ph ph-plus"></i> Nuevo producto
+                        </button>
+                    </div>
+
+                    <!-- ---------------------------------------------------
+                         TABLA RESPONSIVA DE PRODUCTOS
+                         Regla de estado: Crítico ≤ 50% del mínimo,
+                         Bajo stock ≤ mínimo, Óptimo > mínimo.
+                         --------------------------------------------------- -->
+                    <div class="tabla-contenedor">
+                        <table class="tabla" id="tabla-inventario">
+                            <caption class="sr-only">Listado de productos del inventario</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Código</th>
+                                    <th scope="col">Producto</th>
+                                    <th scope="col">Categoría</th>
+                                    <th scope="col">Ubicación</th>
+                                    <th scope="col" class="num">Stock</th>
+                                    <th scope="col" class="num">Mínimo</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Producto 1 -->
+                                <tr data-categoria="hidraulica" data-estado="optimo">
+                                    <td class="tabla__codigo">VAL-001</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-pipe"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Válvula de bola 1/2"</span>
+                                                <span class="texto-secundario">Acero inoxidable</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Hidráulica</td>
+                                    <td>A-01-03</td>
+                                    <td class="num">120</td>
+                                    <td class="num">40</td>
+                                    <td><span class="badge badge--optimo">Óptimo</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Válvula de bola" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=VAL-001" class="btn-icono" aria-label="Registrar movimiento de Válvula de bola" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Válvula de bola" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 2 -->
+                                <tr data-categoria="electrica" data-estado="critico">
+                                    <td class="tabla__codigo">MOT-002</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-engine"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Motor trifásico 5 HP</span>
+                                                <span class="texto-secundario">220/440 V</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Eléctrica</td>
+                                    <td>B-02-01</td>
+                                    <td class="num">2</td>
+                                    <td class="num">5</td>
+                                    <td><span class="badge badge--critico">Crítico</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Motor trifásico" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=MOT-002" class="btn-icono" aria-label="Registrar movimiento de Motor trifásico" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Motor trifásico" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 3 -->
+                                <tr data-categoria="empaque" data-estado="bajo">
+                                    <td class="tabla__codigo">CIN-003</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-tape"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Cinta de embalaje 48 mm</span>
+                                                <span class="texto-secundario">Transparente x 100 m</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Empaque</td>
+                                    <td>C-01-02</td>
+                                    <td class="num">35</td>
+                                    <td class="num">50</td>
+                                    <td><span class="badge badge--bajo">Bajo stock</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Cinta de embalaje" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=CIN-003" class="btn-icono" aria-label="Registrar movimiento de Cinta de embalaje" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Cinta de embalaje" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 4 -->
+                                <tr data-categoria="herramientas" data-estado="optimo">
+                                    <td class="tabla__codigo">TAL-004</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-wrench"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Taladro percutor 800 W</span>
+                                                <span class="texto-secundario">Mandril 1/2"</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Herramientas</td>
+                                    <td>D-03-04</td>
+                                    <td class="num">18</td>
+                                    <td class="num">6</td>
+                                    <td><span class="badge badge--optimo">Óptimo</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Taladro percutor" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=TAL-004" class="btn-icono" aria-label="Registrar movimiento de Taladro percutor" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Taladro percutor" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 5 -->
+                                <tr data-categoria="seguridad" data-estado="critico">
+                                    <td class="tabla__codigo">GUA-005</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-hand"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Guantes de nitrilo (caja x100)</span>
+                                                <span class="texto-secundario">Talla M</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Seguridad industrial</td>
+                                    <td>E-02-01</td>
+                                    <td class="num">4</td>
+                                    <td class="num">20</td>
+                                    <td><span class="badge badge--critico">Crítico</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Guantes de nitrilo" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=GUA-005" class="btn-icono" aria-label="Registrar movimiento de Guantes de nitrilo" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Guantes de nitrilo" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 6 -->
+                                <tr data-categoria="ferreteria" data-estado="optimo">
+                                    <td class="tabla__codigo">TOR-006</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-nut"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Tornillo hexagonal 3/8" (caja)</span>
+                                                <span class="texto-secundario">Galvanizado x 50 und.</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Ferretería</td>
+                                    <td>A-04-02</td>
+                                    <td class="num">210</td>
+                                    <td class="num">80</td>
+                                    <td><span class="badge badge--optimo">Óptimo</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Tornillo hexagonal" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=TOR-006" class="btn-icono" aria-label="Registrar movimiento de Tornillo hexagonal" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Tornillo hexagonal" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 7 -->
+                                <tr data-categoria="seguridad" data-estado="bajo">
+                                    <td class="tabla__codigo">CAS-007</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-hard-hat"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Casco de seguridad</span>
+                                                <span class="texto-secundario">Dieléctrico clase E</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Seguridad industrial</td>
+                                    <td>E-01-03</td>
+                                    <td class="num">12</td>
+                                    <td class="num">15</td>
+                                    <td><span class="badge badge--bajo">Bajo stock</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Casco de seguridad" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=CAS-007" class="btn-icono" aria-label="Registrar movimiento de Casco de seguridad" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Casco de seguridad" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Producto 8 -->
+                                <tr data-categoria="electrica" data-estado="bajo">
+                                    <td class="tabla__codigo">CAB-008</td>
+                                    <td>
+                                        <div class="tabla__producto">
+                                            <span class="tabla__producto-icono"><i class="ph ph-plug"></i></span>
+                                            <div>
+                                                <span class="tabla__producto-nombre">Cable THHN 12 AWG (rollo)</span>
+                                                <span class="texto-secundario">Rollo x 100 m</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Eléctrica</td>
+                                    <td>B-01-05</td>
+                                    <td class="num">9</td>
+                                    <td class="num">10</td>
+                                    <td><span class="badge badge--bajo">Bajo stock</span></td>
+                                    <td>
+                                        <div class="tabla__acciones">
+                                            <button type="button" class="btn-icono" data-accion="editar" aria-label="Editar Cable THHN" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                                            <a href="movimientos.html?producto=CAB-008" class="btn-icono" aria-label="Registrar movimiento de Cable THHN" title="Registrar movimiento"><i class="ph ph-arrows-left-right"></i></a>
+                                            <button type="button" class="btn-icono btn-icono--peligro" data-accion="eliminar" aria-label="Eliminar Cable THHN" title="Eliminar"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Fila mostrada cuando la búsqueda no encuentra resultados -->
+                                <tr id="fila-vacia" hidden>
+                                    <td colspan="8" class="tabla__vacia">
+                                        <i class="ph ph-magnifying-glass"></i>
+                                        No se encontraron productos con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pie de la tabla: contador y leyenda -->
+                    <div class="tabla-pie">
+                        <span id="contador-productos" aria-live="polite">Mostrando 8 de 8 productos</span>
+                        <span>
+                            <span class="badge badge--optimo">Óptimo</span>
+                            <span class="badge badge--bajo">Bajo stock</span>
+                            <span class="badge badge--critico">Crítico</span>
+                        </span>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="pie-pagina">© 2026 Bodega360 · Sistema de gestión de inventarios</footer>
+        </div>
+    </div>
+
+    <!-- Lógica de la aplicación -->
+    <script src="js/app.js"></script>
+</body>
+</html>

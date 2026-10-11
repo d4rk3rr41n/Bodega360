@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Metadatos básicos y configuración responsive -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bodega360 - Alertas de productos con bajo stock o en estado crítico.">
+    <title>Alertas | Bodega360</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librería de iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app">
+
+        <!-- =================================================================
+             SIDEBAR (navegación principal)
+             ================================================================= -->
+        <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+            <a href="dashboard.html" class="sidebar__marca">
+                <i class="ph-fill ph-cube"></i>
+                <span>Bodega360</span>
+            </a>
+
+            <nav class="sidebar__nav">
+                <p class="sidebar__titulo">Menú</p>
+                <ul class="sidebar__lista">
+                    <li><a href="dashboard.html" class="sidebar__enlace"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+                    <li><a href="inventario.html" class="sidebar__enlace"><i class="ph ph-package"></i> Inventario</a></li>
+                    <li><a href="movimientos.html" class="sidebar__enlace"><i class="ph ph-arrows-left-right"></i> Movimientos</a></li>
+                    <li><a href="alertas.html" class="sidebar__enlace"><i class="ph ph-bell-ringing"></i> Alertas <span class="sidebar__contador">5</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar__pie">
+                <div class="sidebar__usuario">
+                    <span class="sidebar__avatar">AD</span>
+                    <div class="sidebar__usuario-info">
+                        <span class="sidebar__usuario-nombre">Administrador</span>
+                        <span class="sidebar__usuario-rol">Jefe de bodega</span>
+                    </div>
+                </div>
+                <button type="button" class="sidebar__salir" data-accion="cerrar-sesion">
+                    <i class="ph ph-sign-out"></i> Cerrar sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Capa oscura para cerrar el menú en móvil -->
+        <div class="overlay" aria-hidden="true"></div>
+
+        <!-- =================================================================
+             ÁREA PRINCIPAL
+             ================================================================= -->
+        <div class="principal">
+
+            <!-- Header superior -->
+            <header class="topbar">
+                <div class="topbar__izquierda">
+                    <button type="button" class="topbar__menu" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar__titulo">Alertas</h1>
+                        <p class="topbar__subtitulo">Productos por debajo del stock mínimo</p>
+                    </div>
+                </div>
+                <div class="topbar__derecha">
+                    <a href="movimientos.html" class="btn btn--primario" aria-label="Registrar movimiento">
+                        <i class="ph ph-plus-circle"></i><span class="btn__texto">Registrar movimiento</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Contenido principal -->
+            <main class="contenido">
+
+                <!-- Resumen de alertas -->
+                <section class="kpis" aria-label="Resumen de alertas">
+                    <article class="kpi kpi--critico">
+                        <span class="kpi__icono"><i class="ph ph-siren"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Críticos</span>
+                            <strong class="kpi__valor">2</strong>
+                            <span class="kpi__variacion">Stock ≤ 50% del mínimo</span>
+                        </div>
+                    </article>
+                    <article class="kpi kpi--alerta">
+                        <span class="kpi__icono"><i class="ph ph-warning"></i></span>
+                        <div class="kpi__info">
+                            <span class="kpi__etiqueta">Bajo stock</span>
+                            <strong class="kpi__valor">3</strong>
+                            <span class="kpi__variacion">Stock ≤ mínimo</span>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- Tarjetas de alerta por producto -->
+                <section class="alertas-grid" aria-label="Listado de alertas">
+
+                    <article class="alerta-tarjeta">
+                        <div class="alerta-tarjeta__cabecera">
+                            <div>
+                                <h2 class="panel__titulo">Motor trifásico 5 HP</h2>
+                                <p class="texto-secundario">MOT-002 · Eléctrica · B-02-01</p>
+                            </div>
+                            <span class="badge badge--critico">Crítico</span>
+                        </div>
+                        <div class="alerta-tarjeta__datos">
+                            <div><strong class="texto-critico">2</strong><span>Stock</span></div>
+                            <div><strong>5</strong><span>Mínimo</span></div>
+                            <div><strong>3</strong><span>Faltante</span></div>
+                        </div>
+                        <a href="movimientos.html?producto=MOT-002&amp;tipo=entrada" class="btn btn--primario"><i class="ph ph-arrow-down-left"></i> Reabastecer</a>
+                    </article>
+
+                    <article class="alerta-tarjeta">
+                        <div class="alerta-tarjeta__cabecera">
+                            <div>
+                                <h2 class="panel__titulo">Guantes de nitrilo (caja x100)</h2>
+                                <p class="texto-secundario">GUA-005 · Seguridad industrial · E-02-01</p>
+                            </div>
+                            <span class="badge badge--critico">Crítico</span>
+                        </div>
+                        <div class="alerta-tarjeta__datos">
+                            <div><strong class="texto-critico">4</strong><span>Stock</span></div>
+                            <div><strong>20</strong><span>Mínimo</span></div>
+                            <div><strong>16</strong><span>Faltante</span></div>
+                        </div>
+                        <a href="movimientos.html?producto=GUA-005&amp;tipo=entrada" class="btn btn--primario"><i class="ph ph-arrow-down-left"></i> Reabastecer</a>
+                    </article>
+
+                    <article class="alerta-tarjeta alerta-tarjeta--bajo">
+                        <div class="alerta-tarjeta__cabecera">
+                            <div>
+                                <h2 class="panel__titulo">Cinta de embalaje 48 mm</h2>
+                                <p class="texto-secundario">CIN-003 · Empaque · C-01-02</p>
+                            </div>
+                            <span class="badge badge--bajo">Bajo stock</span>
+                        </div>
+                        <div class="alerta-tarjeta__datos">
+                            <div><strong class="texto-alerta">35</strong><span>Stock</span></div>
+                            <div><strong>50</strong><span>Mínimo</span></div>
+                            <div><strong>15</strong><span>Faltante</span></div>
+                        </div>
+                        <a href="movimientos.html?producto=CIN-003&amp;tipo=entrada" class="btn btn--secundario"><i class="ph ph-arrow-down-left"></i> Reabastecer</a>
+                    </article>
+
+                    <article class="alerta-tarjeta alerta-tarjeta--bajo">
+                        <div class="alerta-tarjeta__cabecera">
+                            <div>
+                                <h2 class="panel__titulo">Casco de seguridad</h2>
+                                <p class="texto-secundario">CAS-007 · Seguridad industrial · E-01-03</p>
+                            </div>
+                            <span class="badge badge--bajo">Bajo stock</span>
+                        </div>
+                        <div class="alerta-tarjeta__datos">
+                            <div><strong class="texto-alerta">12</strong><span>Stock</span></div>
+                            <div><strong>15</strong><span>Mínimo</span></div>
+                            <div><strong>3</strong><span>Faltante</span></div>
+                        </div>
+                        <a href="movimientos.html?producto=CAS-007&amp;tipo=entrada" class="btn btn--secundario"><i class="ph ph-arrow-down-left"></i> Reabastecer</a>
+                    </article>
+
+                    <article class="alerta-tarjeta alerta-tarjeta--bajo">
+                        <div class="alerta-tarjeta__cabecera">
+                            <div>
+                                <h2 class="panel__titulo">Cable THHN 12 AWG (rollo)</h2>
+                                <p class="texto-secundario">CAB-008 · Eléctrica · B-01-05</p>
+                            </div>
+                            <span class="badge badge--bajo">Bajo stock</span>
+                        </div>
+                        <div class="alerta-tarjeta__datos">
+                            <div><strong class="texto-alerta">9</strong><span>Stock</span></div>
+                            <div><strong>10</strong><span>Mínimo</span></div>
+                            <div><strong>1</strong><span>Faltante</span></div>
+                        </div>
+                        <a href="movimientos.html?producto=CAB-008&amp;tipo=entrada" class="btn btn--secundario"><i class="ph ph-arrow-down-left"></i> Reabastecer</a>
+                    </article>
+                </section>
+            </main>
+
+            <footer class="pie-pagina">© 2026 Bodega360 · Sistema de gestión de inventarios</footer>
+        </div>
+    </div>
+
+    <!-- Lógica de la aplicación -->
+    <script src="js/app.js"></script>
+</body>
+</html>

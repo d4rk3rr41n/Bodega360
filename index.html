@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Metadatos básicos y configuración responsive -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bodega360 - Sistema de gestión de inventarios. Inicio de sesión.">
+    <title>Iniciar sesión | Bodega360</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librería de iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <!-- =====================================================================
+         PANTALLA DE LOGIN (RF04)
+         Izquierda: marca y propuesta de valor | Derecha: formulario
+         ===================================================================== -->
+    <main class="login">
+
+        <!-- Panel izquierdo: identidad de marca -->
+        <section class="login__marca" aria-label="Presentación de Bodega360">
+            <div class="login__logo">
+                <i class="ph-fill ph-cube"></i>
+                <span>Bodega360</span>
+            </div>
+
+            <h1 class="login__lema">
+                Cada producto en su lugar.<br>
+                Cada movimiento bajo control.
+            </h1>
+
+            <p class="login__descripcion">
+                Gestiona tu inventario en tiempo real, controla entradas y salidas,
+                y recibe alertas antes de quedarte sin existencias.
+            </p>
+
+            <!-- Beneficios (visibles desde tablet) -->
+            <ul class="login__beneficios">
+                <li><i class="ph ph-check-circle"></i> Control de stock por ubicación y categoría</li>
+                <li><i class="ph ph-check-circle"></i> Registro trazable de entradas, salidas y ajustes</li>
+                <li><i class="ph ph-check-circle"></i> Alertas automáticas de bajo stock</li>
+            </ul>
+        </section>
+
+        <!-- Panel derecho: formulario de acceso -->
+        <section class="login__formulario-contenedor" aria-label="Formulario de inicio de sesión">
+            <form id="form-login" class="login__formulario" novalidate>
+
+                <div class="login__encabezado">
+                    <h2>Iniciar sesión</h2>
+                    <p class="texto-secundario">Ingresa tus credenciales para acceder al sistema.</p>
+                </div>
+
+                <!-- Campo: correo electrónico -->
+                <div class="campo">
+                    <label for="correo" class="campo__etiqueta">Correo electrónico <span
+                            class="requerido">*</span></label>
+                    <div class="campo__control">
+                        <i class="ph ph-envelope-simple"></i>
+                        <input type="email" id="correo" name="correo" class="input" placeholder="usuario@empresa.com"
+                            autocomplete="email" required>
+                    </div>
+                    <span class="campo__error" aria-live="polite"></span>
+                </div>
+
+                <!-- Campo: contraseña -->
+                <div class="campo">
+                    <label for="clave" class="campo__etiqueta">Contraseña <span class="requerido">*</span></label>
+                    <div class="campo__control">
+                        <i class="ph ph-lock-simple"></i>
+                        <input type="password" id="clave" name="clave" class="input" placeholder="Mínimo 6 caracteres"
+                            autocomplete="current-password" minlength="6" required>
+                        <button type="button" class="campo__ver-clave" data-ver-clave="clave"
+                            aria-label="Mostrar contraseña">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+                    <span class="campo__error" aria-live="polite"></span>
+                </div>
+
+                <!-- Opciones adicionales -->
+                <div class="login__opciones">
+                    <label class="checkbox">
+                        <input type="checkbox" name="recordar"> Recordarme
+                    </label>
+                    <a href="#"
+                        onclick="alert('Comunícate con el administrador del sistema para restablecer tu contraseña.'); return false;">¿Olvidaste
+                        tu contraseña?</a>
+                </div>
+
+                <!-- Botón de envío -->
+                <button type="submit" class="btn btn--primario btn--bloque">
+                    <i class="ph ph-sign-in"></i> Ingresar
+                </button>
+
+                <p class="login__pie">© 2026 Bodega360 · Sistema de gestión de inventarios</p>
+            </form>
+        </section>
+    </main>
+
+    <!-- Lógica de la aplicación -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>

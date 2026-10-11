@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Metadatos básicos y configuración responsive -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bodega360 - Registro de entradas, salidas y ajustes de inventario.">
+    <title>Movimientos | Bodega360</title>
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librería de iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app">
+
+        <!-- =================================================================
+             SIDEBAR (navegación principal)
+             ================================================================= -->
+        <aside class="sidebar" id="sidebar" aria-label="Menú principal">
+            <a href="dashboard.html" class="sidebar__marca">
+                <i class="ph-fill ph-cube"></i>
+                <span>Bodega360</span>
+            </a>
+
+            <nav class="sidebar__nav">
+                <p class="sidebar__titulo">Menú</p>
+                <ul class="sidebar__lista">
+                    <li><a href="dashboard.html" class="sidebar__enlace"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+                    <li><a href="inventario.html" class="sidebar__enlace"><i class="ph ph-package"></i> Inventario</a></li>
+                    <li><a href="movimientos.html" class="sidebar__enlace"><i class="ph ph-arrows-left-right"></i> Movimientos</a></li>
+                    <li><a href="alertas.html" class="sidebar__enlace"><i class="ph ph-bell-ringing"></i> Alertas <span class="sidebar__contador">5</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar__pie">
+                <div class="sidebar__usuario">
+                    <span class="sidebar__avatar">AD</span>
+                    <div class="sidebar__usuario-info">
+                        <span class="sidebar__usuario-nombre">Administrador</span>
+                        <span class="sidebar__usuario-rol">Jefe de bodega</span>
+                    </div>
+                </div>
+                <button type="button" class="sidebar__salir" data-accion="cerrar-sesion">
+                    <i class="ph ph-sign-out"></i> Cerrar sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Capa oscura para cerrar el menú en móvil -->
+        <div class="overlay" aria-hidden="true"></div>
+
+        <!-- =================================================================
+             ÁREA PRINCIPAL
+             ================================================================= -->
+        <div class="principal">
+
+            <!-- Header superior -->
+            <header class="topbar">
+                <div class="topbar__izquierda">
+                    <button type="button" class="topbar__menu" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <div>
+                        <h1 class="topbar__titulo">Movimientos</h1>
+                        <p class="topbar__subtitulo">Entradas, salidas y ajustes de inventario</p>
+                    </div>
+                </div>
+                <div class="topbar__derecha">
+                    <a href="alertas.html" class="topbar__icono" aria-label="Ver alertas">
+                        <i class="ph ph-bell"></i><span class="punto"></span>
+                    </a>
+                    <a href="#form-movimiento" class="btn btn--primario" aria-label="Registrar movimiento">
+                        <i class="ph ph-plus-circle"></i><span class="btn__texto">Registrar movimiento</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Contenido principal -->
+            <main class="contenido">
+                <div class="movimientos-grid">
+
+                    <!-- ---------------------------------------------------
+                         FORMULARIO DE REGISTRO DE MOVIMIENTO (RF02)
+                         --------------------------------------------------- -->
+                    <section class="panel" aria-labelledby="titulo-form">
+                        <div class="panel__encabezado">
+                            <div>
+                                <h2 class="panel__titulo" id="titulo-form"><i class="ph ph-clipboard-text"></i> Registrar movimiento</h2>
+                                <p class="texto-secundario">Los campos marcados con <span class="texto-critico">*</span> son obligatorios.</p>
+                            </div>
+                        </div>
+
+                        <form id="form-movimiento" class="formulario" novalidate>
+
+                            <!-- Selector de producto: cada opción guarda su stock y mínimo -->
+                            <div class="campo">
+                                <label for="producto" class="campo__etiqueta">Producto <span class="requerido">*</span></label>
+                                <div class="campo__control">
+                                    <i class="ph ph-package"></i>
+                                    <select id="producto" name="producto" class="select" required>
+                                        <option value="">Selecciona un producto...</option>
+                                        <option value="VAL-001" data-nombre='Válvula de bola 1/2"' data-stock="120" data-minimo="40">VAL-001 · Válvula de bola 1/2"</option>
+                                        <option value="MOT-002" data-nombre="Motor trifásico 5 HP" data-stock="2" data-minimo="5">MOT-002 · Motor trifásico 5 HP</option>
+                                        <option value="CIN-003" data-nombre="Cinta de embalaje 48 mm" data-stock="35" data-minimo="50">CIN-003 · Cinta de embalaje 48 mm</option>
+                                        <option value="TAL-004" data-nombre="Taladro percutor 800 W" data-stock="18" data-minimo="6">TAL-004 · Taladro percutor 800 W</option>
+                                        <option value="GUA-005" data-nombre="Guantes de nitrilo (caja x100)" data-stock="4" data-minimo="20">GUA-005 · Guantes de nitrilo (caja x100)</option>
+                                        <option value="TOR-006" data-nombre='Tornillo hexagonal 3/8" (caja)' data-stock="210" data-minimo="80">TOR-006 · Tornillo hexagonal 3/8" (caja)</option>
+                                        <option value="CAS-007" data-nombre="Casco de seguridad" data-stock="12" data-minimo="15">CAS-007 · Casco de seguridad</option>
+                                        <option value="CAB-008" data-nombre="Cable THHN 12 AWG (rollo)" data-stock="9" data-minimo="10">CAB-008 · Cable THHN 12 AWG (rollo)</option>
+                                    </select>
+                                </div>
+                                <span class="campo__error" aria-live="polite"></span>
+                            </div>
+
+                            <!-- Información del stock disponible (se muestra con JS) -->
+                            <div class="info-stock" id="info-stock" hidden>
+                                <i class="ph ph-stack"></i>
+                                <div>
+                                    Stock disponible: <strong id="stock-disponible">0</strong> und.
+                                    <span class="texto-secundario">· Mínimo requerido: <span id="stock-minimo">0</span> und.</span>
+                                </div>
+                            </div>
+
+                            <!-- Tipo de movimiento -->
+                            <fieldset class="campo" style="border: none;">
+                                <legend class="campo__etiqueta" style="margin-bottom: var(--espacio-xs);">Tipo de movimiento <span class="requerido">*</span></legend>
+                                <div class="tipo-movimiento">
+                                    <label class="tipo-movimiento__opcion">
+                                        <input type="radio" name="tipo" value="entrada">
+                                        <span class="tipo-movimiento__tarjeta">
+                                            <i class="ph ph-arrow-down-left"></i>
+                                            <span>Entrada<small>Suma al stock</small></span>
+                                        </span>
+                                    </label>
+                                    <label class="tipo-movimiento__opcion">
+                                        <input type="radio" name="tipo" value="salida">
+                                        <span class="tipo-movimiento__tarjeta">
+                                            <i class="ph ph-arrow-up-right"></i>
+                                            <span>Salida<small>Resta del stock</small></span>
+                                        </span>
+                                    </label>
+                                    <label class="tipo-movimiento__opcion">
+                                        <input type="radio" name="tipo" value="ajuste">
+                                        <span class="tipo-movimiento__tarjeta">
+                                            <i class="ph ph-sliders-horizontal"></i>
+                                            <span>Ajuste<small>Corrige el conteo</small></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="campo__error" aria-live="polite"></span>
+                            </fieldset>
+
+                            <!-- Cantidad y motivo en dos columnas (desde tablet) -->
+                            <div class="form-grid">
+                                <div class="campo">
+                                    <label for="cantidad" class="campo__etiqueta">Cantidad <span class="requerido">*</span></label>
+                                    <div class="campo__control">
+                                        <i class="ph ph-hash"></i>
+                                        <input type="number" id="cantidad" name="cantidad" class="input" min="0" step="1" placeholder="0" inputmode="numeric" required>
+                                    </div>
+                                    <span class="campo__ayuda" id="ayuda-cantidad">Ingresa un número entero mayor a cero.</span>
+                                    <span class="campo__error" aria-live="polite"></span>
+                                </div>
+
+                                <div class="campo">
+                                    <label for="motivo" class="campo__etiqueta">Motivo <span class="requerido">*</span></label>
+                                    <div class="campo__control">
+                                        <i class="ph ph-tag"></i>
+                                        <select id="motivo" name="motivo" class="select" required>
+                                            <option value="">Selecciona un motivo...</option>
+                                            <optgroup label="Entradas">
+                                                <option value="compra">Compra a proveedor</option>
+                                                <option value="devolucion">Devolución de cliente</option>
+                                            </optgroup>
+                                            <optgroup label="Salidas">
+                                                <option value="produccion">Despacho a producción</option>
+                                                <option value="venta">Venta / pedido</option>
+                                                <option value="traslado">Traslado a otra sede</option>
+                                                <option value="averia">Producto dañado / avería</option>
+                                            </optgroup>
+                                            <optgroup label="Ajustes">
+                                                <option value="conteo">Ajuste por conteo físico</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <span class="campo__error" aria-live="polite"></span>
+                                </div>
+
+                                <!-- Observaciones (obligatorio solo en ajustes) -->
+                                <div class="campo campo--completo">
+                                    <label for="observacion" class="campo__etiqueta">Observaciones</label>
+                                    <textarea id="observacion" name="observacion" class="textarea" maxlength="250"
+                                              placeholder="Ej.: Orden de compra OC-1045, factura del proveedor, responsable del despacho..."></textarea>
+                                    <span class="campo__ayuda">Obligatorio para ajustes. Máximo 250 caracteres.</span>
+                                    <span class="campo__error" aria-live="polite"></span>
+                                </div>
+                            </div>
+
+                            <!-- Acciones del formulario -->
+                            <div class="formulario__acciones">
+                                <button type="reset" class="btn btn--secundario">
+                                    <i class="ph ph-x"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn--primario">
+                                    <i class="ph ph-floppy-disk"></i> Guardar movimiento
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- ---------------------------------------------------
+                         PANEL LATERAL: MOVIMIENTOS RECIENTES
+                         --------------------------------------------------- -->
+                    <aside class="panel" aria-labelledby="titulo-recientes">
+                        <div class="panel__encabezado">
+                            <h2 class="panel__titulo" id="titulo-recientes"><i class="ph ph-clock-counter-clockwise"></i> Movimientos recientes</h2>
+                        </div>
+                        <ul class="lista-movimientos" id="lista-recientes" aria-live="polite">
+                            <li class="movimiento">
+                                <span class="movimiento__icono movimiento__icono--entrada"><i class="ph ph-arrow-down-left"></i></span>
+                                <div class="movimiento__info">
+                                    <p class="movimiento__titulo">Válvula de bola 1/2"</p>
+                                    <p class="movimiento__detalle">Compra a proveedor · Hoy, 10:42 a. m.</p>
+                                </div>
+                                <span class="movimiento__cantidad texto-exito">+20</span>
+                            </li>
+                            <li class="movimiento">
+                                <span class="movimiento__icono movimiento__icono--salida"><i class="ph ph-arrow-up-right"></i></span>
+                                <div class="movimiento__info">
+                                    <p class="movimiento__titulo">Guantes de nitrilo (caja x100)</p>
+                                    <p class="movimiento__detalle">Despacho a producción · Hoy, 9:15 a. m.</p>
+                                </div>
+                                <span class="movimiento__cantidad texto-critico">-6</span>
+                            </li>
+                            <li class="movimiento">
+                                <span class="movimiento__icono movimiento__icono--salida"><i class="ph ph-arrow-up-right"></i></span>
+                                <div class="movimiento__info">
+                                    <p class="movimiento__titulo">Taladro percutor 800 W</p>
+                                    <p class="movimiento__detalle">Venta / pedido · Hoy, 8:05 a. m.</p>
+                                </div>
+                                <span class="movimiento__cantidad texto-critico">-2</span>
+                            </li>
+                            <li class="movimiento">
+                                <span class="movimiento__icono movimiento__icono--ajuste"><i class="ph ph-sliders-horizontal"></i></span>
+                                <div class="movimiento__info">
+                                    <p class="movimiento__titulo">Cinta de embalaje 48 mm</p>
+                                    <p class="movimiento__detalle">Ajuste por conteo físico · Ayer, 5:30 p. m.</p>
+                                </div>
+                                <span class="movimiento__cantidad texto-alerta">=35</span>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </main>
+
+            <footer class="pie-pagina">© 2026 Bodega360 · Sistema de gestión de inventarios</footer>
+        </div>
+    </div>
+
+    <!-- Lógica de la aplicación -->
+    <script src="js/app.js"></script>
+</body>
+</html>
